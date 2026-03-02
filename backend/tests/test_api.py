@@ -105,7 +105,7 @@ class TestPrompts:
         
         # NOTE: This assertion will fail due to Bug #2!
         # The updated_at should be different from original
-        # assert data["updated_at"] != original_updated_at  # Uncomment after fix
+        assert data["updated_at"] != original_updated_at  # Uncomment after fix
     
     def test_sorting_order(self, client: TestClient):
         """Test that prompts are sorted newest first.
@@ -118,11 +118,13 @@ class TestPrompts:
         prompt1 = {"title": "First", "content": "First prompt content"}
         prompt2 = {"title": "Second", "content": "Second prompt content"}
         
-        client.post("/prompts", json=prompt1)
+        response1 = client.post("/prompts", json=prompt1)
         time.sleep(0.1)
-        client.post("/prompts", json=prompt2)
+        response2 = client.post("/prompts", json=prompt2)
         
         response = client.get("/prompts")
+        assert response.status_code == 200
+
         prompts = response.json()["prompts"]
         
         # Newest (Second) should be first
@@ -163,17 +165,21 @@ class TestCollections:
         collection_id = col_response.json()["id"]
         
         # Create prompt in collection
-        prompt_data = {**sample_prompt_data, "collection_id": collection_id}
-        prompt_response = client.post("/prompts", json=prompt_data)
+        sample_prompt_data["collection_id"] = collection_id
+        prompt_response = client.post("/prompts", json=sample_prompt_data)
         prompt_id = prompt_response.json()["id"]
         
         # Delete collection
-        client.delete(f"/collections/{collection_id}")
+        del_response = client.delete(f"/collections/{collection_id}")
+        assert del_response.status_code == 204
         
         # The prompt still exists but has invalid collection_id
         # This is Bug #4 - should be handled properly
-        prompts = client.get("/prompts").json()["prompts"]
-        if prompts:
+        prompt_response_after = client.get(f"/prompts/{prompt_id}")
+        assert prompt_response_after.status_code == 200
+        assert prompt_response_after.json()["collection_id"] is None
+        
             # Prompt exists with orphaned collection_id
-            assert prompts[0]["collection_id"] == collection_id
             # After fix, collection_id should be None or prompt should be deleted
+
+
