@@ -1,167 +1,208 @@
-# PromptLab
+PromptLab
 
-**Your AI Prompt Engineering Platform**
+AI Prompt Engineering Platform
 
----
+Project Overview
 
-## Welcome to the Team! 👋
+PromptLab is a backend application for managing AI prompt templates.
 
-Congratulations on joining the PromptLab engineering team! You've been brought on to help us build the next generation of prompt engineering tools.
+It allows AI engineers to create, organize, update, and retrieve prompt templates through a REST API built with FastAPI.
 
-### What is PromptLab?
+This project demonstrates professional backend development practices including:
 
-PromptLab is an internal tool for AI engineers to **store, organize, and manage their prompts**. Think of it as a "Postman for Prompts" — a professional workspace where teams can:
+RESTful API design
 
-- 📝 Store prompt templates with variables (`{{input}}`, `{{context}}`)
-- 📁 Organize prompts into collections
-- 🏷️ Tag and search prompts
-- 📜 Track version history
-- 🧪 Test prompts with sample inputs
+Documentation standards
 
-### The Current Situation
+Testing with pytest
 
-The previous developer left us with a *partially working* backend. The core structure is there, but:
+CI/CD integration
 
-- There are **several bugs** that need fixing
-- Some **features are incomplete**
-- The **documentation is minimal** (you'll fix that)
-- There are **no tests** worth mentioning
-- **No CI/CD pipeline** exists
-- **No frontend** has been built yet
+Docker containerization
 
-Your job over the next 4 weeks is to transform this into a **production-ready, full-stack application**.
+Purpose of the Project
 
----
+PromptLab is designed to provide a structured way to manage reusable AI prompts.
 
-## Quick Start
+The platform allows users to:
 
-### Prerequisites
+Store prompt templates
 
-- Python 3.10+
-- Node.js 18+ (for Week 4)
-- Git
+Organize prompts into collections
 
-### Run Locally
+Retrieve prompts by ID
 
-```bash
-# Clone the repo
-git clone <your-repo-url>
+Update prompts fully or partially
+
+Track creation and modification timestamps
+
+Over four weeks, this project evolves into a production-ready full-stack application.
+
+Features
+Prompt Management
+
+Create a prompt
+
+Retrieve all prompts
+
+Retrieve a prompt by ID
+
+Update a prompt (PUT)
+
+Partially update a prompt (PATCH)
+
+Delete a prompt
+
+Automatic created_at and updated_at tracking
+
+Collection Management
+
+Create collection
+
+Retrieve collections
+
+Retrieve collection by ID
+
+Delete collection
+
+Prerequisites
+
+Before running the project, ensure you have:
+
+Python 3.10+
+
+pip
+
+Git
+
+Node.js 18+ (for frontend development)
+
+Docker (optional for containerization)
+
+Installation
+
+Clone the repository:
+
+git clone <your-repository-url>
 cd promptlab
 
-# Set up backend
+
+Install backend dependencies:
+
 cd backend
 pip install -r requirements.txt
+
+Quick Start
+
+Run the backend server:
+
+cd backend
 python main.py
-```
 
-API runs at: http://localhost:8000
 
-API docs at: http://localhost:8000/docs
+The API will be available at:
 
-### Run Tests
+http://localhost:8000
 
-```bash
+Interactive API documentation (Swagger UI):
+
+http://localhost:8000/docs
+
+API Endpoint Summary
+Health
+
+GET /health
+
+Prompts
+
+GET /prompts
+GET /prompts/{id}
+POST /prompts
+PUT /prompts/{id}
+PATCH /prompts/{id}
+DELETE /prompts/{id}
+
+Example: Create Prompt
+
+Request:
+
+POST /prompts
+{
+  "title": "Summarize Text",
+  "content": "Summarize the following: {{input}}",
+  "collection_id": "1"
+}
+
+
+Response:
+
+{
+  "id": "123",
+  "title": "Summarize Text",
+  "content": "Summarize the following: {{input}}",
+  "collection_id": "1",
+  "created_at": "2024-01-01T10:00:00",
+  "updated_at": "2024-01-01T10:00:00"
+}
+
+Collections
+
+GET /collections
+GET /collections/{id}
+POST /collections
+DELETE /collections/{id}
+
+Running Tests
+
+Run tests:
+
 cd backend
 pytest tests/ -v
-```
 
----
 
-## Project Structure
+Run tests with coverage:
 
-```
+pytest tests/ -v --cov=app --cov-report=term-missing
+
+Development Setup
+
+Project structure:
+
 promptlab/
-├── README.md                    # You are here
-├── PROJECT_BRIEF.md             # Your assignment details
-├── GRADING_RUBRIC.md            # How you'll be graded
-│
 ├── backend/
 │   ├── app/
-│   │   ├── __init__.py
-│   │   ├── api.py              # FastAPI routes (has bugs!)
-│   │   ├── models.py           # Pydantic models
-│   │   ├── storage.py          # In-memory storage
-│   │   └── utils.py            # Helper functions
 │   ├── tests/
-│   │   ├── __init__.py
-│   │   ├── test_api.py         # Basic tests
-│   │   └── conftest.py         # Test fixtures
-│   ├── main.py                 # Entry point
-│   └── requirements.txt
-│
-├── frontend/                    # You'll create this in Week 4
-├── specs/                       # You'll create this in Week 2
-├── docs/                        # You'll create this in Week 2
-└── .github/                     # You'll set up CI/CD in Week 3
-```
+│   └── main.py
+├── frontend/
+├── docs/
+├── specs/
+└── .github/
 
----
 
-## Your Mission
+Development guidelines:
 
-### 🧪 Experimentation Encouraged!
-While we provide guidelines, **you are the engineer**. If you see a better way to solve a problem using AI, do it!
-- Want to swap the storage layer for a real database? **Go for it.**
-- Want to add Authentication? **Do it.**
-- Want to rewrite the API in a different style? **As long as tests pass, you're clear.**
+Follow RESTful API principles
 
-The goal is to learn how to build *better* software *faster* with AI. Don't be afraid to break things and rebuild them better.
+Add docstrings to all functions and classes
 
-### Week 1: Fix the Backend
-- Understand this codebase using AI
-- Find and fix the bugs
-- Implement missing features
+Write tests for new features
 
-### Week 2: Document Everything
-- Write proper documentation
-- Create feature specifications
-- Set up coding standards
+Maintain meaningful commit history
 
-### Week 3: Make it Production-Ready
-- Write comprehensive tests
-- Implement new features with TDD
-- Set up CI/CD and Docker
+Ensure tests pass before pushing
 
-### Week 4: Build the Frontend
-- Create a React frontend
-- Connect it to the backend
-- Polish the user experience
+Contributing
 
----
+Create a new branch
 
-## API Endpoints (Current)
+Make your changes
 
-| Method | Endpoint | Description | Status |
-|--------|----------|-------------|--------|
-| GET | `/health` | Health check | ✅ Works |
-| GET | `/prompts` | List all prompts | ⚠️ Has issues |
-| GET | `/prompts/{id}` | Get single prompt | ❌ Bug |
-| POST | `/prompts` | Create prompt | ✅ Works |
-| PUT | `/prompts/{id}` | Update prompt | ⚠️ Has issues |
-| DELETE | `/prompts/{id}` | Delete prompt | ✅ Works |
-| GET | `/collections` | List collections | ✅ Works |
-| GET | `/collections/{id}` | Get collection | ✅ Works |
-| POST | `/collections` | Create collection | ✅ Works |
-| DELETE | `/collections/{id}` | Delete collection | ❌ Bug |
+Ensure all tests pass
 
----
+Commit with clear messages
 
-## Tech Stack
+Push and open a Pull Request
 
-- **Backend**: Python 3.10+, FastAPI, Pydantic
-- **Frontend**: React, Vite (Week 4)
-- **Testing**: pytest
-- **DevOps**: Docker, GitHub Actions (Week 3)
+License
 
----
-
-## Need Help?
-
-1. **Use AI tools** — This is an AI-assisted coding course!
-2. Read the `PROJECT_BRIEF.md` for detailed instructions
-3. Check `GRADING_RUBRIC.md` to understand expectations
-4. Ask questions in the course forum
-
----
-
-Good luck, and welcome to the team! 🚀
+This project is developed for educational purposes as part of the PromptLab engineering assignment.
