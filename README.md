@@ -1,98 +1,66 @@
-PromptLab
+# PromptLab
 
-AI Prompt Engineering Platform
+**AI Prompt Engineering Platform**
 
-Project Overview
+PromptLab is a backend application for managing AI prompt templates. It provides a REST API built with FastAPI to create, organize, update, and retrieve prompts and collections.
 
-PromptLab is a backend application for managing AI prompt templates.
+---
 
-It allows AI engineers to create, organize, update, and retrieve prompt templates through a REST API built with FastAPI.
+## Project Overview and Purpose
 
-This project demonstrates professional backend development practices including:
+PromptLab is designed for AI engineers who need a structured way to manage reusable prompts.
 
-RESTful API design
+It helps teams:
+- Store prompt templates with variables like `{{input}}` and `{{context}}`
+- Organize prompts into collections
+- Update prompts (full update and partial update)
+- Track timestamps (`created_at`, `updated_at`) for changes
 
-Documentation standards
+This project is built as a 4-week engineering assignment to practice backend development, documentation, testing, CI/CD, Docker, and frontend integration.
 
-Testing with pytest
+---
 
-CI/CD integration
+## Features
 
-Docker containerization
+### Prompt Management
+- Create a prompt
+- List all prompts
+- Get a prompt by ID
+- Update a prompt (PUT)
+- Partially update a prompt (PATCH)
+- Delete a prompt
+- Automatic `created_at` and `updated_at` timestamps
 
-Purpose of the Project
+### Collection Management
+- Create a collection
+- List collections
+- Get collection by ID
+- Delete a collection
 
-PromptLab is designed to provide a structured way to manage reusable AI prompts.
+---
 
-The platform allows users to:
+## Prerequisites and Installation
 
-Store prompt templates
+### Prerequisites
+- Python 3.10+
+- pip
+- Git
+- Node.js 18+ (for Week 4 frontend)
+- Docker (optional, used in Week 3)
 
-Organize prompts into collections
-
-Retrieve prompts by ID
-
-Update prompts fully or partially
-
-Track creation and modification timestamps
-
-Over four weeks, this project evolves into a production-ready full-stack application.
-
-Features
-Prompt Management
-
-Create a prompt
-
-Retrieve all prompts
-
-Retrieve a prompt by ID
-
-Update a prompt (PUT)
-
-Partially update a prompt (PATCH)
-
-Delete a prompt
-
-Automatic created_at and updated_at tracking
-
-Collection Management
-
-Create collection
-
-Retrieve collections
-
-Retrieve collection by ID
-
-Delete collection
-
-Prerequisites
-
-Before running the project, ensure you have:
-
-Python 3.10+
-
-pip
-
-Git
-
-Node.js 18+ (for frontend development)
-
-Docker (optional for containerization)
-
-Installation
+### Installation
 
 Clone the repository:
-
-git clone <your-repository-url>
+```bash
+git clone <your-repo-url>
 cd promptlab
-
 
 Install backend dependencies:
 
 cd backend
 pip install -r requirements.txt
 
-Quick Start
+Quick Start Guide
 
 Run the backend server:
 
@@ -100,15 +68,15 @@ cd backend
 python main.py
 
 
-The API will be available at:
+API will run at:
 
 http://localhost:8000
 
-Interactive API documentation (Swagger UI):
+Swagger API docs:
 
 http://localhost:8000/docs
 
-API Endpoint Summary
+API Endpoint Summary (with example)
 Health
 
 GET /health
@@ -116,17 +84,33 @@ GET /health
 Prompts
 
 GET /prompts
+
 GET /prompts/{id}
+
 POST /prompts
+
 PUT /prompts/{id}
+
 PATCH /prompts/{id}
+
 DELETE /prompts/{id}
+
+Collections
+
+GET /collections
+
+GET /collections/{id}
+
+POST /collections
+
+DELETE /collections/{id}
 
 Example: Create Prompt
 
-Request:
+Request
 
 POST /prompts
+
 {
   "title": "Summarize Text",
   "content": "Summarize the following: {{input}}",
@@ -134,7 +118,7 @@ POST /prompts
 }
 
 
-Response:
+Response
 
 {
   "id": "123",
@@ -145,12 +129,32 @@ Response:
   "updated_at": "2024-01-01T10:00:00"
 }
 
-Collections
+Development Setup
 
-GET /collections
-GET /collections/{id}
-POST /collections
-DELETE /collections/{id}
+Project structure:
+
+promptlab/
+├── README.md
+├── PROJECT_BRIEF.md
+├── GRADING_RUBRIC.md
+├── backend/
+│   ├── app/
+│   ├── tests/
+│   ├── main.py
+│   └── requirements.txt
+├── frontend/      # Week 4
+├── docs/          # Week 2
+├── specs/         # Week 2
+└── .github/       # Week 3
+
+
+Developer notes:
+
+Keep changes small and commit often
+
+Ensure tests pass before pushing
+
+Add docstrings for functions/classes during Week 2
 
 Running Tests
 
@@ -164,45 +168,25 @@ Run tests with coverage:
 
 pytest tests/ -v --cov=app --cov-report=term-missing
 
-Development Setup
-
-Project structure:
-
-promptlab/
-├── backend/
-│   ├── app/
-│   ├── tests/
-│   └── main.py
-├── frontend/
-├── docs/
-├── specs/
-└── .github/
-
-
-Development guidelines:
-
-Follow RESTful API principles
-
-Add docstrings to all functions and classes
-
-Write tests for new features
-
-Maintain meaningful commit history
-
-Ensure tests pass before pushing
-
-Contributing
+Contributing Guidelines
 
 Create a new branch
 
-Make your changes
+Make changes
 
-Ensure all tests pass
+Run tests locally
 
-Commit with clear messages
+Commit with meaningful messages
 
-Push and open a Pull Request
+Push branch and open a Pull Request
+
+Example:
+
+git checkout -b week2-readme
+git add README.md
+git commit -m "Week 2: Add comprehensive README"
+git push origin week2-readme
 
 License
 
-This project is developed for educational purposes as part of the PromptLab engineering assignment.
+This project is created for educational purposes as part of the PromptLab engineering assignment.
