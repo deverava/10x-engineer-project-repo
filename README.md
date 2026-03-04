@@ -51,7 +51,7 @@ This project is built as a 4-week engineering assignment to practice backend dev
 ### Installation
 
 Clone the repository:
-```bash
+` ``bash
 git clone <your-repo-url>
 cd promptlab
 
