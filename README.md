@@ -6,23 +6,23 @@ AI Prompt Engineering Platform for managing reusable prompts and collections thr
 
 ## Table of Contents
 
-- Project Overview and Purpose
-- Features List
-- Tech Stack
-- Prerequisites and Installation
-- Quick Start Guide
-- API Endpoint Summary with Examples
-- Development Setup
-- Project Structure
-- Documentation
-- Contributing Guidelines
-- Summary
+- [Project Overview and Purpose](#project-overview-and-purpose)
+- [Features List](#features-list)
+- [Tech Stack](#tech-stack)
+- [Prerequisites and Installation](#prerequisites-and-installation)
+- [Quick Start Guide](#quick-start-guide)
+- [API Endpoint Summary with Examples](#api-endpoint-summary-with-examples)
+- [Development Setup](#development-setup)
+- [Project Structure](#project-structure)
+- [Documentation](#documentation)
+- [Contributing Guidelines](#contributing-guidelines)
+- [Summary](#summary)
 
 ---
 
-## Project Overview and Purpose
+# Project Overview and Purpose
 
-PromptLab is an AI Prompt Engineering Platform designed to help AI engineers store, organize, and manage prompts efficiently.
+PromptLab is an **AI Prompt Engineering Platform** designed to help AI engineers store, organize, and manage prompts efficiently.
 
 It provides a structured environment where prompts can be created, updated, organized into collections, and retrieved using a REST API. The system enables teams to reuse prompt templates, manage prompt collections, and build better workflows for AI-powered applications.
 
@@ -30,7 +30,7 @@ The platform is built using **FastAPI and Python**, making it lightweight, scala
 
 ---
 
-## Features List
+# Features List
 
 PromptLab currently provides the following features:
 
@@ -43,7 +43,7 @@ PromptLab currently provides the following features:
 - In-memory storage for rapid development
 - Interactive API documentation using Swagger
 
-Future improvements may include:
+### Future Improvements
 
 - Database integration
 - Authentication and authorization
@@ -53,7 +53,7 @@ Future improvements may include:
 
 ---
 
-## Tech Stack
+# Tech Stack
 
 PromptLab is built using the following technologies:
 
@@ -65,7 +65,7 @@ PromptLab is built using the following technologies:
 
 ---
 
-## Prerequisites and Installation
+# Prerequisites and Installation
 
 Before running PromptLab, ensure the following are installed:
 
@@ -75,40 +75,50 @@ Before running PromptLab, ensure the following are installed:
 
 Clone the repository:
 
-git clone <your-repo-url>  
+```bash
+git clone <your-repo-url>
 cd promptlab
+```
 
 Install backend dependencies:
 
-cd backend  
+```bash
+cd backend
 pip install -r requirements.txt
+```
 
 ---
 
-## Quick Start Guide
+# Quick Start Guide
 
-To start the PromptLab backend server:
+Start the PromptLab backend server:
 
-cd backend  
+```bash
+cd backend
 python main.py
+```
 
 The API will run at:
 
+```
 http://localhost:8000
+```
 
-FastAPI automatically generates interactive documentation.
+FastAPI automatically generates interactive API documentation.
 
 Visit:
 
+```
 http://localhost:8000/docs
+```
 
-This allows you to test API endpoints directly from the browser.
+You can test API endpoints directly from the browser.
 
 ---
 
-## API Endpoint Summary with Examples
+# API Endpoint Summary with Examples
 
-### Health Endpoint
+## Health Endpoint
 
 | Method | Endpoint | Description |
 |------|------|------|
@@ -116,18 +126,22 @@ This allows you to test API endpoints directly from the browser.
 
 Example:
 
+```bash
 curl -X GET http://localhost:8000/health
+```
 
-Response:
+Example Response
 
+```json
 {
   "status": "healthy",
   "version": "1.0.0"
 }
+```
 
 ---
 
-### Prompt Endpoints
+## Prompt Endpoints
 
 | Method | Endpoint | Description |
 |------|------|------|
@@ -139,17 +153,21 @@ Response:
 
 Example: Create Prompt
 
+```http
 POST /prompts
+```
 
+```json
 {
-"title": "Summarize Text",
-"content": "Summarize the following: {{input}}",
-"description": "Summarizes input text"
+  "title": "Summarize Text",
+  "content": "Summarize the following: {{input}}",
+  "description": "Summarizes input text"
 }
+```
 
 ---
 
-### Collection Endpoints
+## Collection Endpoints
 
 | Method | Endpoint | Description |
 |------|------|------|
@@ -160,73 +178,83 @@ POST /prompts
 
 Example:
 
+```bash
 curl -X GET http://localhost:8000/collections
+```
 
 ---
 
-## Development Setup
+# Development Setup
 
-To prepare the development environment:
+Prepare the development environment:
 
-1. Install Python 3.10+
-2. Clone the repository
-3. Navigate to the backend directory
-4. Install dependencies
-5. Run the application
-
-Example:
-
-cd backend  
-pip install -r requirements.txt  
+```bash
+cd backend
+pip install -r requirements.txt
 python main.py
+```
 
 Run tests:
 
-cd backend  
+```bash
+cd backend
 pytest tests/ -v
+```
 
 Run tests with coverage:
 
+```bash
 pytest tests/ --cov=app
+```
 
 ---
 
-## Project Structure
+# Project Structure
 
+```
 promptlab/
-├── README.md  
-├── PROJECT_BRIEF.md  
-├── backend/  
-│   ├── app/  
-│   │   ├── api.py  
-│   │   ├── models.py  
-│   │   ├── storage.py  
-│   │   └── utils.py  
-│   ├── tests/  
-│   ├── main.py  
-│   └── requirements.txt  
-├── docs/  
-│   └── API_REFERENCE.md  
-├── frontend/  
-│   └── (future frontend application)  
-├── specs/  
-│   └── feature specifications  
-└── .github/  
-    └── CI/CD workflows  
+├── README.md
+├── PROJECT_BRIEF.md
+├── backend/
+│   ├── app/
+│   │   ├── api.py
+│   │   ├── models.py
+│   │   ├── storage.py
+│   │   └── utils.py
+│   ├── tests/
+│   ├── main.py
+│   └── requirements.txt
+│
+├── docs/
+│   └── API_REFERENCE.md
+│
+├── frontend/
+│   └── (future frontend application)
+│
+├── specs/
+│   ├── prompt-versions.md
+│   └── tagging-system.md
+│
+└── .github/
+    └── copilot-instructions.md
+```
 
 ---
 
-## Documentation
+# Documentation
 
-Additional documentation for the project can be found below:
+Additional documentation is available in the following files:
 
-API Reference → docs/API_REFERENCE.md
+- **API Reference:** `docs/API_REFERENCE.md`
+- **Feature Specifications:**
+  - `specs/prompt-versions.md`
+  - `specs/tagging-system.md`
 
-This document provides detailed explanations of API endpoints, request formats, and response examples.
+These documents provide detailed API explanations and planned feature specifications.
 
 ---
 
-## Contributing Guidelines
+# Contributing Guidelines
 
 To contribute to PromptLab:
 
@@ -238,17 +266,21 @@ To contribute to PromptLab:
 
 Example workflow:
 
-git checkout -b feature/update-readme  
-git add .  
-git commit -m "Improve README documentation"  
-git push origin feature/update-readme  
+```bash
+git checkout -b feature/update-readme
+git add .
+git commit -m "Improve README documentation"
+git push origin feature/update-readme
+```
 
 All contributions should follow clean coding practices and include documentation where necessary.
 
 ---
 
-## Summary
+# Summary
 
-PromptLab provides a structured platform for managing AI prompts using a modern backend stack based on FastAPI and Python.
+PromptLab provides a structured platform for managing AI prompts using a modern backend stack based on **FastAPI and Python**.
 
 It supports prompt management, collection organization, and search functionality, forming the foundation for a scalable AI prompt engineering platform.
+
+Future development may include database support, authentication systems, prompt version tracking, tagging features, and a web-based frontend interface.
