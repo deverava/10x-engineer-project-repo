@@ -1,192 +1,254 @@
 # PromptLab
 
-**AI Prompt Engineering Platform**
+AI Prompt Engineering Platform for managing reusable prompts and collections through a REST API.
 
-PromptLab is a backend application for managing AI prompt templates. It provides a REST API built with FastAPI to create, organize, update, and retrieve prompts and collections.
+---
+
+## Table of Contents
+
+- Project Overview and Purpose
+- Features List
+- Tech Stack
+- Prerequisites and Installation
+- Quick Start Guide
+- API Endpoint Summary with Examples
+- Development Setup
+- Project Structure
+- Documentation
+- Contributing Guidelines
+- Summary
 
 ---
 
 ## Project Overview and Purpose
 
-PromptLab is designed for AI engineers who need a structured way to manage reusable prompts.
+PromptLab is an AI Prompt Engineering Platform designed to help AI engineers store, organize, and manage prompts efficiently.
 
-It helps teams:
-- Store prompt templates with variables like `{{input}}` and `{{context}}`
-- Organize prompts into collections
-- Update prompts (full update and partial update)
-- Track timestamps (`created_at`, `updated_at`) for changes
+It provides a structured environment where prompts can be created, updated, organized into collections, and retrieved using a REST API. The system enables teams to reuse prompt templates, manage prompt collections, and build better workflows for AI-powered applications.
 
-This project is built as a 4-week engineering assignment to practice backend development, documentation, testing, CI/CD, Docker, and frontend integration.
+The platform is built using **FastAPI and Python**, making it lightweight, scalable, and easy to extend for future improvements such as database integration and frontend interfaces.
 
 ---
 
-## Features
+## Features List
 
-### Prompt Management
-- Create a prompt
-- List all prompts
-- Get a prompt by ID
-- Update a prompt (PUT)
-- Partially update a prompt (PATCH)
-- Delete a prompt
-- Automatic `created_at` and `updated_at` timestamps
+PromptLab currently provides the following features:
 
-### Collection Management
-- Create a collection
-- List collections
-- Get collection by ID
-- Delete a collection
+- Create, read, update, and delete prompts
+- Organize prompts into collections
+- Search prompts by title or description
+- Filter prompts by collection
+- Automatic timestamp tracking
+- REST API built with FastAPI
+- In-memory storage for rapid development
+- Interactive API documentation using Swagger
+
+Future improvements may include:
+
+- Database integration
+- Authentication and authorization
+- Prompt versioning
+- Tagging system
+- Web-based frontend interface
+
+---
+
+## Tech Stack
+
+PromptLab is built using the following technologies:
+
+- **Python 3.10+** – Core programming language
+- **FastAPI** – High-performance API framework
+- **Pydantic** – Data validation and serialization
+- **Pytest** – Testing framework
+- **GitHub** – Version control and collaboration
 
 ---
 
 ## Prerequisites and Installation
 
-### Prerequisites
-- Python 3.10+
-- pip
-- Git
-- Node.js 18+ (for Week 4 frontend)
-- Docker (optional, used in Week 3)
+Before running PromptLab, ensure the following are installed:
 
-### Installation
+- Python 3.10 or higher
+- Git
+- pip (Python package manager)
 
 Clone the repository:
-```bash
-git clone <your-repo-url>
+
+git clone <your-repo-url>  
 cd promptlab
 
 Install backend dependencies:
 
-cd backend
+cd backend  
 pip install -r requirements.txt
 
-Quick Start Guide
+---
 
-Run the backend server:
+## Quick Start Guide
 
-cd backend
+To start the PromptLab backend server:
+
+cd backend  
 python main.py
 
-
-API will run at:
+The API will run at:
 
 http://localhost:8000
 
-Swagger API docs:
+FastAPI automatically generates interactive documentation.
+
+Visit:
 
 http://localhost:8000/docs
 
-API Endpoint Summary (with example)
-Health
+This allows you to test API endpoints directly from the browser.
 
-GET /health
+---
 
-Prompts
+## API Endpoint Summary with Examples
 
-GET /prompts
+### Health Endpoint
 
-GET /prompts/{id}
-
-POST /prompts
-
-PUT /prompts/{id}
-
-PATCH /prompts/{id}
-
-DELETE /prompts/{id}
-
-Collections
-
-GET /collections
-
-GET /collections/{id}
-
-POST /collections
-
-DELETE /collections/{id}
-
-Example: Create Prompt
-
-Request
-
-POST /prompts
-
-{
-  "title": "Summarize Text",
-  "content": "Summarize the following: {{input}}",
-  "collection_id": "1"
-}
-
-
-Response
-
-{
-  "id": "123",
-  "title": "Summarize Text",
-  "content": "Summarize the following: {{input}}",
-  "collection_id": "1",
-  "created_at": "2024-01-01T10:00:00",
-  "updated_at": "2024-01-01T10:00:00"
-}
-
-Development Setup
-
-Project structure:
-
-promptlab/
-├── README.md
-├── PROJECT_BRIEF.md
-├── GRADING_RUBRIC.md
-├── backend/
-│   ├── app/
-│   ├── tests/
-│   ├── main.py
-│   └── requirements.txt
-├── frontend/      # Week 4
-├── docs/          # Week 2
-├── specs/         # Week 2
-└── .github/       # Week 3
-
-
-Developer notes:
-
-Keep changes small and commit often
-
-Ensure tests pass before pushing
-
-Add docstrings for functions/classes during Week 2
-
-Running Tests
-
-Run tests:
-
-cd backend
-pytest tests/ -v
-
-
-Run tests with coverage:
-
-pytest tests/ -v --cov=app --cov-report=term-missing
-
-Contributing Guidelines
-
-Create a new branch
-
-Make changes
-
-Run tests locally
-
-Commit with meaningful messages
-
-Push branch and open a Pull Request
+| Method | Endpoint | Description |
+|------|------|------|
+| GET | /health | Check API health status |
 
 Example:
 
-git checkout -b week2-readme
-git add README.md
-git commit -m "Week 2: Add comprehensive README"
-git push origin week2-readme
+curl -X GET http://localhost:8000/health
 
-License
+Response:
 
-This project is created for educational purposes as part of the PromptLab engineering assignment.
+{
+  "status": "healthy",
+  "version": "1.0.0"
+}
+
+---
+
+### Prompt Endpoints
+
+| Method | Endpoint | Description |
+|------|------|------|
+| GET | /prompts | Retrieve all prompts |
+| GET | /prompts/{prompt_id} | Retrieve a specific prompt |
+| POST | /prompts | Create a new prompt |
+| PUT | /prompts/{prompt_id} | Update an existing prompt |
+| DELETE | /prompts/{prompt_id} | Delete a prompt |
+
+Example: Create Prompt
+
+POST /prompts
+
+{
+"title": "Summarize Text",
+"content": "Summarize the following: {{input}}",
+"description": "Summarizes input text"
+}
+
+---
+
+### Collection Endpoints
+
+| Method | Endpoint | Description |
+|------|------|------|
+| GET | /collections | Retrieve all collections |
+| GET | /collections/{collection_id} | Retrieve a specific collection |
+| POST | /collections | Create a new collection |
+| DELETE | /collections/{collection_id} | Delete a collection |
+
+Example:
+
+curl -X GET http://localhost:8000/collections
+
+---
+
+## Development Setup
+
+To prepare the development environment:
+
+1. Install Python 3.10+
+2. Clone the repository
+3. Navigate to the backend directory
+4. Install dependencies
+5. Run the application
+
+Example:
+
+cd backend  
+pip install -r requirements.txt  
+python main.py
+
+Run tests:
+
+cd backend  
+pytest tests/ -v
+
+Run tests with coverage:
+
+pytest tests/ --cov=app
+
+---
+
+## Project Structure
+
+promptlab/
+├── README.md  
+├── PROJECT_BRIEF.md  
+├── backend/  
+│   ├── app/  
+│   │   ├── api.py  
+│   │   ├── models.py  
+│   │   ├── storage.py  
+│   │   └── utils.py  
+│   ├── tests/  
+│   ├── main.py  
+│   └── requirements.txt  
+├── docs/  
+│   └── API_REFERENCE.md  
+├── frontend/  
+│   └── (future frontend application)  
+├── specs/  
+│   └── feature specifications  
+└── .github/  
+    └── CI/CD workflows  
+
+---
+
+## Documentation
+
+Additional documentation for the project can be found below:
+
+API Reference → docs/API_REFERENCE.md
+
+This document provides detailed explanations of API endpoints, request formats, and response examples.
+
+---
+
+## Contributing Guidelines
+
+To contribute to PromptLab:
+
+1. Fork the repository
+2. Create a new branch for your feature or bug fix
+3. Make your changes
+4. Run tests locally
+5. Push your branch and create a Pull Request
+
+Example workflow:
+
+git checkout -b feature/update-readme  
+git add .  
+git commit -m "Improve README documentation"  
+git push origin feature/update-readme  
+
+All contributions should follow clean coding practices and include documentation where necessary.
+
+---
+
+## Summary
+
+PromptLab provides a structured platform for managing AI prompts using a modern backend stack based on FastAPI and Python.
+
+It supports prompt management, collection organization, and search functionality, forming the foundation for a scalable AI prompt engineering platform.
