@@ -4,14 +4,15 @@ These tests verify the API endpoints work correctly.
 Students should expand these tests significantly in Week 3.
 """
 
-import pytest
 from fastapi.testclient import TestClient
+from app.api import app  # Ensure this import path points to where app is defined
 
+client = TestClient(app)
 
 class TestHealth:
     """Tests for health endpoint."""
     
-    def test_health_check(self, client: TestClient):
+    def test_health_check(self):
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
@@ -22,7 +23,11 @@ class TestHealth:
 class TestPrompts:
     """Tests for prompt endpoints."""
     
-    def test_create_prompt(self, client: TestClient, sample_prompt_data):
+    def test_create_prompt(self):
+        sample_prompt_data = {
+            "title": "Test Prompt",
+            "content": "Sample content."
+        }
         response = client.post("/prompts", json=sample_prompt_data)
         assert response.status_code == 201
         data = response.json()
@@ -30,8 +35,12 @@ class TestPrompts:
         assert data["content"] == sample_prompt_data["content"]
         assert "id" in data
         assert "created_at" in data
-    
-    def test_list_prompts_empty(self, client: TestClient):
+
+    def test_create_prompt_with_empty_title(self):
+        response = client.post('/prompts', json={"title": "", "content": "Sample content."})
+        assert response.status_code == 400
+
+    def test_list_prompts_empty(self):
         response = client.get("/prompts")
         assert response.status_code == 200
         data = response.json()
@@ -118,9 +127,9 @@ class TestPrompts:
         prompt1 = {"title": "First", "content": "First prompt content"}
         prompt2 = {"title": "Second", "content": "Second prompt content"}
         
-        response1 = client.post("/prompts", json=prompt1)
+        client.post("/prompts", json=prompt1)
         time.sleep(0.1)
-        response2 = client.post("/prompts", json=prompt2)
+        client.post("/prompts", json=prompt2)
         
         response = client.get("/prompts")
         assert response.status_code == 200
@@ -182,4 +191,20 @@ class TestCollections:
             # Prompt exists with orphaned collection_id
             # After fix, collection_id should be None or prompt should be deleted
 
+
+def test_get_nonexistent_prompt(client):
+    response = client.get('/prompts/nonexistent-id')
+    assert response.status_code == 404
+
+def test_create_prompt_with_empty_title(client):
+    response = client.post('/prompts', json={"title": "", "content": "Sample content."})
+    assert response.status_code == 400
+
+def test_filter_prompts_by_collection(client):
+    response = client.get('/prompts?collection_id=1')
+    assert response.status_code == 200
+
+def test_get_prompts(client):
+    response = client.get('/prompts')
+    assert response.status_code == 200
 

@@ -74,6 +74,10 @@ class PromptBase(BaseModel):
         None,
         description="Optional ID of the collection that this prompt belongs to.",
     )
+    tags: Optional[List[str]] = Field(
+    default_factory=list,
+    description="Optional tags for categorizing prompts.",
+)
 
 
 class PromptCreate(PromptBase):
