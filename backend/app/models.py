@@ -5,10 +5,10 @@ including prompt models, collection models, and common API response models.
 """
 
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 def generate_id() -> str:
@@ -41,6 +41,7 @@ def get_current_time() -> datetime:
 
 # ============== Prompt Models ==============
 
+
 class PromptBase(BaseModel):
     """Base model for prompt payloads.
 
@@ -52,6 +53,7 @@ class PromptBase(BaseModel):
         content: The prompt template content. May include variables like {{input}}.
         description: Optional longer description for context or usage notes.
         collection_id: Optional ID of the collection the prompt belongs to.
+        tags: Optional tags for organizing prompts.
     """
 
     title: str = Field(
@@ -74,30 +76,19 @@ class PromptBase(BaseModel):
         None,
         description="Optional ID of the collection that this prompt belongs to.",
     )
-    tags: Optional[List[str]] = Field(
-    default_factory=list,
-    description="Optional tags for categorizing prompts.",
-)
+    tags: List[str] = Field(
+        default_factory=list,
+        description="Optional tags for categorizing prompts.",
+    )
 
 
 class PromptCreate(PromptBase):
-    """Request model for creating a prompt.
-
-    Inherits:
-        PromptBase: Includes title, content, description, and collection_id.
-    """
+    """Request model for creating a prompt."""
     pass
 
 
 class PromptUpdate(PromptBase):
-    """Request model for updating a prompt (full update).
-
-    This model represents a full replacement update (PUT) where all fields are
-    expected (same as PromptBase).
-
-    Inherits:
-        PromptBase: Includes title, content, description, and collection_id.
-    """
+    """Request model for updating a prompt (full update)."""
     pass
 
 
@@ -112,6 +103,8 @@ class Prompt(PromptBase):
         updated_at: Timestamp when the prompt was last updated (UTC).
     """
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: str = Field(
         default_factory=generate_id,
         description="Unique identifier for the prompt.",
@@ -125,12 +118,9 @@ class Prompt(PromptBase):
         description="UTC timestamp when the prompt was last updated.",
     )
 
-    class Config:
-        """Pydantic configuration for model behavior."""
-        from_attributes = True
-
 
 # ============== Collection Models ==============
+
 
 class CollectionBase(BaseModel):
     """Base model for collection payloads.
@@ -156,11 +146,7 @@ class CollectionBase(BaseModel):
 
 
 class CollectionCreate(CollectionBase):
-    """Request model for creating a collection.
-
-    Inherits:
-        CollectionBase: Includes name and description.
-    """
+    """Request model for creating a collection."""
     pass
 
 
@@ -172,6 +158,8 @@ class Collection(CollectionBase):
         created_at: Timestamp when the collection was created (UTC).
     """
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: str = Field(
         default_factory=generate_id,
         description="Unique identifier for the collection.",
@@ -181,12 +169,9 @@ class Collection(CollectionBase):
         description="UTC timestamp when the collection was created.",
     )
 
-    class Config:
-        """Pydantic configuration for model behavior."""
-        from_attributes = True
-
 
 # ============== Response Models ==============
+
 
 class PromptList(BaseModel):
     """Response model for listing prompts.

@@ -1,15 +1,6 @@
-"""FastAPI routes for PromptLab.
+"""FastAPI routes for PromptLab."""
 
-This module defines the HTTP API for PromptLab using FastAPI. It includes:
-- Health check endpoint
-- CRUD endpoints for prompts
-- CRUD endpoints for collections
-
-The API uses an in-memory storage layer (app.storage.storage) and helper
-functions (app.utils) for sorting, filtering, and searching prompts.
-"""
-
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -45,16 +36,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ============== Health Check ==============
+# ================== Helper Functions ==================
+
+
+def validate_prompt_data(prompt_data: PromptCreate) -> None:
+    """Validate prompt business rules."""
+    if not prompt_data.title.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Title cannot be empty.",
+        )
+
+
+def validate_collection_exists(collection_id: Optional[str]) -> None:
+    """Ensure collection exists if provided."""
+    if collection_id:
+        collection = storage.get_collection(collection_id)
+        if not collection:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Collection not found",
+            )
+
+
+def filter_by_tag(prompts: List[Prompt], tag: Optional[str]) -> List[Prompt]:
+    """Filter prompts by tag."""
+    if not tag:
+        return prompts
+
+    return [
+        prompt
+        for prompt in prompts
+        if tag.lower() in [t.lower() for t in (prompt.tags or [])]
+    ]
+
+
+# ================== Health ==================
 
 
 @app.get("/health", response_model=HealthResponse)
 def health_check() -> HealthResponse:
-    """Health check endpoint."""
     return HealthResponse(status="healthy", version=__version__)
 
 
-# ============== Prompt Endpoints ==============
+# ================== Prompt Endpoints ==================
 
 
 @app.get("/prompts", response_model=PromptList)
@@ -63,7 +88,6 @@ def list_prompts(
     search: Optional[str] = None,
     tag: Optional[str] = None,
 ) -> PromptList:
-    """List prompts with optional filtering, search, and tag filtering."""
     prompts = storage.get_all_prompts()
 
     if collection_id:
@@ -72,13 +96,7 @@ def list_prompts(
     if search:
         prompts = search_prompts(prompts, search)
 
-    if tag:
-        prompts = [
-            prompt
-            for prompt in prompts
-            if tag.lower() in [existing_tag.lower() for existing_tag in (prompt.tags or [])]
-        ]
-
+    prompts = filter_by_tag(prompts, tag)
     prompts = sort_prompts_by_date(prompts, descending=True)
 
     return PromptList(prompts=prompts, total=len(prompts))
@@ -86,7 +104,6 @@ def list_prompts(
 
 @app.get("/prompts/{prompt_id}", response_model=Prompt)
 def get_prompt(prompt_id: str) -> Prompt:
-    """Retrieve a single prompt by ID."""
     prompt = storage.get_prompt(prompt_id)
     if prompt is None:
         raise HTTPException(status_code=404, detail="Prompt not found")
@@ -95,7 +112,6 @@ def get_prompt(prompt_id: str) -> Prompt:
 
 @app.post("/prompts", response_model=Prompt, status_code=201)
 async def create_prompt(request: Request) -> Prompt:
-    """Create a new prompt with custom validation and 400 responses."""
     try:
         data = await request.json()
         prompt_data = PromptCreate(**data)
@@ -105,19 +121,8 @@ async def create_prompt(request: Request) -> Prompt:
             detail="Invalid input",
         )
 
-    if not prompt_data.title.strip():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Title cannot be empty.",
-        )
-
-    if prompt_data.collection_id:
-        collection = storage.get_collection(prompt_data.collection_id)
-        if not collection:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Collection not found",
-            )
+    validate_prompt_data(prompt_data)
+    validate_collection_exists(prompt_data.collection_id)
 
     prompt = Prompt(**prompt_data.model_dump())
     return storage.create_prompt(prompt)
@@ -125,18 +130,11 @@ async def create_prompt(request: Request) -> Prompt:
 
 @app.put("/prompts/{prompt_id}", response_model=Prompt)
 def update_prompt(prompt_id: str, prompt_data: PromptUpdate) -> Prompt:
-    """Update an existing prompt (full update)."""
     existing = storage.get_prompt(prompt_id)
     if not existing:
         raise HTTPException(status_code=404, detail="Prompt not found")
 
-    if prompt_data.collection_id:
-        collection = storage.get_collection(prompt_data.collection_id)
-        if not collection:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Collection not found",
-            )
+    validate_collection_exists(prompt_data.collection_id)
 
     updated_prompt = Prompt(
         id=existing.id,
@@ -158,25 +156,22 @@ def update_prompt(prompt_id: str, prompt_data: PromptUpdate) -> Prompt:
 
 @app.delete("/prompts/{prompt_id}", status_code=204)
 def delete_prompt(prompt_id: str) -> None:
-    """Delete a prompt by ID."""
     if not storage.delete_prompt(prompt_id):
         raise HTTPException(status_code=404, detail="Prompt not found")
     return None
 
 
-# ============== Collection Endpoints ==============
+# ================== Collection Endpoints ==================
 
 
 @app.get("/collections", response_model=CollectionList)
 def list_collections() -> CollectionList:
-    """List all collections."""
     collections = storage.get_all_collections()
     return CollectionList(collections=collections, total=len(collections))
 
 
 @app.get("/collections/{collection_id}", response_model=Collection)
 def get_collection(collection_id: str) -> Collection:
-    """Retrieve a single collection by ID."""
     collection = storage.get_collection(collection_id)
     if not collection:
         raise HTTPException(status_code=404, detail="Collection not found")
@@ -185,14 +180,12 @@ def get_collection(collection_id: str) -> Collection:
 
 @app.post("/collections", response_model=Collection, status_code=201)
 def create_collection(collection_data: CollectionCreate) -> Collection:
-    """Create a new collection."""
     collection = Collection(**collection_data.model_dump())
     return storage.create_collection(collection)
 
 
 @app.delete("/collections/{collection_id}", status_code=204)
 def delete_collection(collection_id: str) -> None:
-    """Delete a collection by ID."""
     if not storage.delete_collection(collection_id):
         raise HTTPException(status_code=404, detail="Collection not found")
 
