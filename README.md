@@ -1,286 +1,292 @@
-# PromptLab
+# 🚀 PromptLab
 
-AI Prompt Engineering Platform for managing reusable prompts and collections through a REST API.
+AI Prompt Engineering Platform for managing reusable prompts and collections through a REST API and modern React frontend.
 
 ---
 
-## Table of Contents
+## 📌 Table of Contents
 
 - [Project Overview and Purpose](#project-overview-and-purpose)
 - [Features List](#features-list)
 - [Tech Stack](#tech-stack)
 - [Prerequisites and Installation](#prerequisites-and-installation)
 - [Quick Start Guide](#quick-start-guide)
-- [API Endpoint Summary with Examples](#api-endpoint-summary-with-examples)
+- [API Endpoint Summary](#api-endpoint-summary)
 - [Development Setup](#development-setup)
 - [Project Structure](#project-structure)
+- [Frontend Features](#frontend-features)
 - [Documentation](#documentation)
 - [Contributing Guidelines](#contributing-guidelines)
 - [Summary](#summary)
 
 ---
 
-# Project Overview and Purpose
+## 📖 Project Overview and Purpose
 
-PromptLab is an **AI Prompt Engineering Platform** designed to help AI engineers store, organize, and manage prompts efficiently.
+PromptLab is a **Full Stack AI Prompt Engineering Platform** designed to help engineers store, organize, search, and manage prompts efficiently.
 
-It provides a structured environment where prompts can be created, updated, organized into collections, and retrieved using a REST API. The system enables teams to reuse prompt templates, manage prompt collections, and build better workflows for AI-powered applications.
+It provides:
+- A **FastAPI backend** for prompt and collection management
+- A **React frontend dashboard** for user interaction
+- A structured workflow for reusable prompt templates
 
-The platform is built using **FastAPI and Python**, making it lightweight, scalable, and easy to extend for future improvements such as database integration and frontend interfaces.
+This project demonstrates **real-world full-stack development**, including API design, frontend integration, and UI/UX design.
 
 ---
 
-# Features List
+## ✨ Features List
 
-PromptLab currently provides the following features:
-
+### 🔧 Backend Features
 - Create, read, update, and delete prompts
 - Organize prompts into collections
-- Search prompts by title or description
+- Search prompts by title/content
 - Filter prompts by collection
 - Automatic timestamp tracking
 - REST API built with FastAPI
 - In-memory storage for rapid development
-- Interactive API documentation using Swagger
+- Interactive API documentation (Swagger)
 
-### Future Improvements
-
-- Database integration
-- Authentication and authorization
-- Prompt versioning
-- Tagging system
-- Web-based frontend interface
-
----
-
-# Tech Stack
-
-PromptLab is built using the following technologies:
-
-- **Python 3.10+** – Core programming language
-- **FastAPI** – High-performance API framework
-- **Pydantic** – Data validation and serialization
-- **Pytest** – Testing framework
-- **GitHub** – Version control and collaboration
+### 🎨 Frontend Features
+- Responsive React dashboard (Vite)
+- Sidebar with collections
+- Create, edit, and delete prompts
+- Create and manage collections
+- Search prompts dynamically
+- Prompt detail view
+- Clean UI with modern styling
+- Loading and error handling
 
 ---
 
-# Prerequisites and Installation
+## 🏗️ Tech Stack
+
+### Backend
+- Python 3.10+
+- FastAPI
+- Pydantic
+- Pytest
+
+### Frontend
+- React (Vite)
+- JavaScript (ES6+)
+- CSS (Custom styling)
+
+### Tools
+- Git & GitHub
+- Codespaces
+- Uvicorn
+
+---
+
+## ⚙️ Prerequisites and Installation
 
 Before running PromptLab, ensure the following are installed:
 
-- Python 3.10 or higher
+- Python 3.10+
+- Node.js (v16+ recommended)
 - Git
-- pip (Python package manager)
+- pip
 
 Clone the repository:
 
 ```bash
 git clone <your-repo-url>
-cd promptlab
+cd 10x-engineer-project-repo
 ```
 
-Install backend dependencies:
+---
+
+## 🚀 Quick Start Guide
+
+### ▶️ Run Backend
 
 ```bash
 cd backend
 pip install -r requirements.txt
+uvicorn app.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+Backend will run at:
+
+```
+http://127.0.0.1:8000
+```
+
+Swagger Docs:
+
+```
+http://127.0.0.1:8000/docs
 ```
 
 ---
 
-# Quick Start Guide
-
-Start the PromptLab backend server:
+### ▶️ Run Frontend
 
 ```bash
-cd backend
-python main.py
+cd frontend
+npm install
+npm run dev
 ```
 
-The API will run at:
+Frontend will run at:
 
 ```
-http://localhost:8000
+http://localhost:5173
 ```
-
-FastAPI automatically generates interactive API documentation.
-
-Visit:
-
-```
-http://localhost:8000/docs
-```
-
-You can test API endpoints directly from the browser.
 
 ---
 
-# API Endpoint Summary with Examples
+## 🔗 API Integration
 
-## Health Endpoint
+Make sure frontend uses:
+
+```js
+const BASE_URL = "http://127.0.0.1:8000";
+```
+
+⚠️ Do not use Codespaces URL for final submission.
+
+---
+
+## 📡 API Endpoint Summary
+
+### Health Endpoint
 
 | Method | Endpoint | Description |
 |------|------|------|
 | GET | /health | Check API health status |
 
-Example:
-
-```bash
-curl -X GET http://localhost:8000/health
-```
-
-Example Response
-
-```json
-{
-  "status": "healthy",
-  "version": "1.0.0"
-}
-```
-
 ---
 
-## Prompt Endpoints
+### Prompt Endpoints
 
 | Method | Endpoint | Description |
 |------|------|------|
 | GET | /prompts | Retrieve all prompts |
-| GET | /prompts/{prompt_id} | Retrieve a specific prompt |
+| GET | /prompts/{id} | Retrieve a specific prompt |
 | POST | /prompts | Create a new prompt |
-| PUT | /prompts/{prompt_id} | Update an existing prompt |
-| DELETE | /prompts/{prompt_id} | Delete a prompt |
-
-Example: Create Prompt
-
-```http
-POST /prompts
-```
-
-```json
-{
-  "title": "Summarize Text",
-  "content": "Summarize the following: {{input}}",
-  "description": "Summarizes input text"
-}
-```
+| PUT | /prompts/{id} | Update an existing prompt |
+| DELETE | /prompts/{id} | Delete a prompt |
 
 ---
 
-## Collection Endpoints
+### Collection Endpoints
 
 | Method | Endpoint | Description |
 |------|------|------|
 | GET | /collections | Retrieve all collections |
-| GET | /collections/{collection_id} | Retrieve a specific collection |
 | POST | /collections | Create a new collection |
-| DELETE | /collections/{collection_id} | Delete a collection |
-
-Example:
-
-```bash
-curl -X GET http://localhost:8000/collections
-```
+| DELETE | /collections/{id} | Delete a collection |
 
 ---
 
-# Development Setup
+## 🧪 Development Setup
 
-Prepare the development environment:
+Run backend:
 
 ```bash
 cd backend
 pip install -r requirements.txt
-python main.py
+uvicorn app.api:app --reload
 ```
 
 Run tests:
 
 ```bash
-cd backend
-pytest tests/ -v
+pytest tests/ -v --cov=app
 ```
 
-Run tests with coverage:
+Run frontend:
 
 ```bash
-pytest tests/ --cov=app
+cd frontend
+npm install
+npm run dev
 ```
 
 ---
 
-# Project Structure
+## 📂 Project Structure
 
 ```
-promptlab/
-├── README.md
-├── PROJECT_BRIEF.md
+10x-engineer-project-repo/
+│
 ├── backend/
 │   ├── app/
-│   │   ├── api.py
-│   │   ├── models.py
-│   │   ├── storage.py
-│   │   └── utils.py
 │   ├── tests/
-│   ├── main.py
 │   └── requirements.txt
 │
-├── docs/
-│   └── API_REFERENCE.md
-│
 ├── frontend/
-│   └── (future frontend application)
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
 │
-├── specs/
-│   ├── prompt-versions.md
-│   └── tagging-system.md
-│
-└── .github/
-    └── copilot-instructions.md
+└── README.md
 ```
 
 ---
 
-# Documentation
+## 🎨 Frontend Features
 
-Additional documentation is available in the following files:
+- Dashboard view for prompts
+- Sidebar for collections
+- Prompt creation form
+- Edit and delete functionality
+- Search and filtering
+- Responsive UI design
 
-- **API Reference:** `docs/API_REFERENCE.md`
-- **Feature Specifications:**
+---
+
+## 📚 Documentation
+
+Additional documentation:
+
+- API Reference: `docs/API_REFERENCE.md`
+- Feature Specs:
   - `specs/prompt-versions.md`
   - `specs/tagging-system.md`
 
-These documents provide detailed API explanations and planned feature specifications.
-
 ---
 
-# Contributing Guidelines
+## 🤝 Contributing Guidelines
 
-To contribute to PromptLab:
+1. Fork the repository  
+2. Create a new branch  
+3. Make your changes  
+4. Run tests  
+5. Submit a pull request  
 
-1. Fork the repository
-2. Create a new branch for your feature or bug fix
-3. Make your changes
-4. Run tests locally
-5. Push your branch and create a Pull Request
-
-Example workflow:
+Example:
 
 ```bash
 git checkout -b feature/update-readme
 git add .
-git commit -m "Improve README documentation"
+git commit -m "Improve README"
 git push origin feature/update-readme
 ```
 
-All contributions should follow clean coding practices and include documentation where necessary.
+---
+
+## 📝 Summary
+
+PromptLab is a **full-stack AI prompt management platform** built using FastAPI and React.
+
+It supports:
+- Prompt CRUD operations
+- Collection management
+- Search and filtering
+- Modern frontend dashboard
+
+This project demonstrates practical full-stack development and can be extended with features like authentication, database integration, and cloud deployment.
 
 ---
 
-# Summary
+## ✅ Status
 
-PromptLab provides a structured platform for managing AI prompts using a modern backend stack based on **FastAPI and Python**.
+✔ Backend Completed  
+✔ Frontend Completed  
+✔ Full CRUD Working  
+✔ API Integration Working  
+✔ Responsive UI Implemented  
 
-It supports prompt management, collection organization, and search functionality, forming the foundation for a scalable AI prompt engineering platform.
-
-Future development may include database support, authentication systems, prompt version tracking, tagging features, and a web-based frontend interface.
+---
